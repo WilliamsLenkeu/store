@@ -22,7 +22,7 @@ public class Poste {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    @NotBlank(message = "Le libellé du poste est obligatoire")
+    @NotNull(message = "Le libellé du poste est obligatoire")  // Remplacez @NotBlank par @NotNull
     private nomPoste libellePoste;
 
     @Column(nullable = false)

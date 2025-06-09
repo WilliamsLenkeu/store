@@ -51,10 +51,9 @@ public class PosteService {
 
     // Supprimer de la BD un poste par son ID
     public void deletePoste(UUID id) {
-        // Si le poste a supprimer n'existe pas il faut afficher un message
-        if (!posteRepository.existsById(id)) {
-            throw new EntityNotFoundException("Le poste avec id " + id + " n'existe pas !");
-        }
-        posteRepository.deleteById(id);
+        Poste poste = posteRepository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException("Poste introuvable"));
+        
+        posteRepository.delete(poste);
     }
 }

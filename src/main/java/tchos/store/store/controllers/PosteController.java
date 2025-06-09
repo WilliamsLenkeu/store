@@ -133,13 +133,20 @@ public class PosteController {
 
     // Supprimer un poste de la BD
     @GetMapping("/delete/{id}")
-    public String delete(@PathVariable UUID id, Model model, RedirectAttributes ra) {
-        posteService.deletePoste(id);
-
-        // Message flash
-        String msg = "Le poste a été supprimé avec succès !";
-        ra.addFlashAttribute("msg", msg);
-
+    public String deletePoste(@PathVariable UUID id, RedirectAttributes ra) {
+        System.out.println("Tentative de suppression du poste ID: " + id);
+        try {
+            // Vérifier d'abord s'il y a des employés associés
+            if (!employeService.getAllEmployeesByPoste(id).isEmpty()) {
+                ra.addFlashAttribute("error", "Impossible de supprimer : des employés sont associés à ce poste");
+                return "redirect:/poste";
+            }
+            
+            posteService.deletePoste(id);
+            ra.addFlashAttribute("msg", "Poste supprimé avec succès !");
+        } catch (EntityNotFoundException e) {
+            ra.addFlashAttribute("error", e.getMessage());
+        }
         return "redirect:/poste";
     }
 }
